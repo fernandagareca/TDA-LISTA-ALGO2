@@ -81,9 +81,7 @@ void pruebas_en_una_lista_inexistente()
 		lista_ultimo(lista) == NULL,
 		"no es posible listar ultimo elemento en una lista inerxistente");
 }
-void cargar_lista()
-{
-}
+
 void pruebas_de_eliminacion()
 {
 	lista_t *lista = lista_crear();
