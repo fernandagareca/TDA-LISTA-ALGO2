@@ -18,7 +18,15 @@ struct lista_iterador {
 	nodo_t *nodo_actual;
 	lista_t *lista;
 };
-
+int comparador(void *valor1, void *valor2)
+{
+	char *v1 = valor1;
+	char *v2 = valor2;
+	if (v1 == v2) {
+		return 0;
+	}
+	return -1;
+}
 void pruebas_de_crear_lista_recien_creada()
 {
 	lista_t *lista = lista_crear();
@@ -80,6 +88,9 @@ void pruebas_en_una_lista_inexistente()
 	pa2m_afirmar(
 		lista_ultimo(lista) == NULL,
 		"no es posible listar ultimo elemento en una lista inerxistente");
+	pa2m_afirmar(lista_buscar_elemento(lista, comparador, &elemento) ==
+			     NULL,
+		     "buscar elemento devuleve null si la lista no existe");
 }
 
 void pruebas_de_eliminacion()
@@ -177,15 +188,6 @@ void prueba_de_insercion_lista()
 	lista_destruir(lista);
 }
 
-int comparador(void *valor1, void *valor2)
-{
-	char *v1 = valor1;
-	char *v2 = valor2;
-	if (v1 == v2) {
-		return 0;
-	}
-	return -1;
-}
 void pruebas_de_busqueda_de_lista()
 {
 	lista_t *lista = lista_crear();
@@ -228,7 +230,7 @@ bool funcion(void *elemento1, void *elemento2)
 	return true;
 }
 
-void pruebas_de_iterador_externo()
+void pruebas_de_iterador_interno()
 {
 	lista_t *lista = lista_crear();
 	char *elemento1 = "yaco";
@@ -241,16 +243,13 @@ void pruebas_de_iterador_externo()
 	lista_insertar(lista, elemento3);
 	lista_insertar(lista, elemento4);
 
-	lista_iterador_t *iterador = lista_iterador_crear(lista);
-	pa2m_afirmar(iterador != NULL, "iterador creado distinto de NULL");
 	pa2m_afirmar(lista_con_cada_elemento(lista, funcion, elemento1) ==
 			     lista_tamanio(lista),
 		     "se iteraron todos los elementos de la lista");
 
 	lista_destruir(lista);
-	lista_iterador_destruir(iterador);
 }
-void pruebas_iterdor_lista_vacia()
+void pruebas_iterdor_con_lista_vacia()
 {
 	lista_t *lista = lista_crear();
 	lista_iterador_t *iterador = lista_iterador_crear(lista);
@@ -357,6 +356,37 @@ void pruebas_null_de_cola()
 		     "el tamaño de una cola inexistente es 0");
 	pa2m_afirmar(cola_vacia(cola) == true, "una cola null no esta vacia");
 }
+
+void pruebas_de_iterador_externo()
+{
+	lista_t *lista = lista_crear();
+	lista_iterador_t *iterador;
+
+	void *elemento1 = (void *)30, *elemento2 = (void *)64,
+	     *elemento3 = (void *)54, *elemento4 = (void *)61,
+	     *elemento5 = (void *)20, *elemento6 = (void *)10,
+	     *elemento7 = (void *)90;
+
+	lista_insertar(lista, elemento1);
+	lista_insertar(lista, elemento2);
+	lista_insertar(lista, elemento3);
+	lista_insertar(lista, elemento4);
+	lista_insertar(lista, elemento5);
+	lista_insertar(lista, elemento6);
+	lista_insertar(lista, elemento7);
+
+	int elementos_recoridos = 0;
+	for (iterador = lista_iterador_crear(lista);
+	     lista_iterador_tiene_siguiente(iterador);
+	     lista_iterador_avanzar(iterador)) {
+		elementos_recoridos++;
+	}
+	pa2m_afirmar(elementos_recoridos == lista_tamanio(lista),
+		     "se iteraron la cantidad exacta de elementos en la lista");
+
+	lista_destruir(lista);
+	lista_iterador_destruir(iterador);
+}
 int main()
 {
 	pa2m_nuevo_grupo(
@@ -374,9 +404,11 @@ int main()
 	prueba_de_insercion_lista();
 	pa2m_nuevo_grupo("PRUEBAS DE BUSQUEDA");
 	pruebas_de_busqueda_de_lista();
+	pa2m_nuevo_grupo("PRUEBAS DE ITERADOR INTERNO");
+	pruebas_de_iterador_interno();
 	pa2m_nuevo_grupo("PRUEBAS DE ITERADOR EXTERNO");
+	pruebas_iterdor_con_lista_vacia();
 	pruebas_de_iterador_externo();
-	pruebas_iterdor_lista_vacia();
 
 	pa2m_nuevo_grupo(
 		"------------------PRUEBAS DE PILA-------------------------");

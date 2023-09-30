@@ -31,7 +31,7 @@ ________________________________________________________________________________
 ##  Estructuras:
 
 
-En la estructura de lista agregué un punteo al último nodo en la lista para facilitar la inserción al final de la lista y no tener que recorrer buscando la última posición y que la complejidad pase de o(n) a o(1), también agregue un campo para tener la cantidad de elementos en la lista.
+En la estructura de lista agregué un punteo al último nodo para no tener que recorrer buscando la última posición ya sea para obtener o insertar al final de la lista y que la complejidad pase de o(n) a o(1), también agregue un campo para tener la cantidad de elementos en la lista.
 
 ```c
 struct lista {
@@ -40,7 +40,7 @@ struct lista {
 	size_t cantidad;
 };
 
-En la estructura del iterador agrege un campo para un puntero a la lista que es lo que se iba a iterar y un puntero al nodo actual por ser una lista de nodos.
+En la estructura del iterador agrege un campo para un puntero a la lista que es lo que se va a iterar y un puntero al nodo actual por ser una lista de nodos enlazados.
 
 
 struct lista_iterador {
@@ -51,8 +51,7 @@ struct lista_iterador {
 ```
 
 En el archivo `lista.c` la función `lista_crear` utiliza `calloc` para inicializar un puntero a una lista en el heap,
-la cual tiene un puntero al primer nodo y uno para el nodo el ultimo
-nodo, más un campo para guardar la cantidad actual de elementos en la lista. En la función `lista_insertar` se reserva memoria para un nodo en el heap el cual contiene un campo para el elemento recibido y un puntero al siguiente nodo que será inicializado en `NULL` momentáneamente hasta que se inserte otro nodo actualizando el puntero al último nodo y aumentando la cantidad de elementos en la lista.
+la cual tiene un puntero al primer nodo y uno para el ultimo, más un campo para guardar la cantidad actual de elementos en la lista. En la función `lista_insertar` se reserva memoria para un nodo en el heap el cual contiene un campo para el elemento recibido y un puntero al siguiente nodo que será inicializado en `NULL` momentáneamente hasta que se inserte otro nodo actualizando el puntero al último nodo y aumentando la cantidad de elementos en la lista.
 
 ```c
 /* EN LA FUNCION LISTA INSERTAR  */
@@ -71,7 +70,7 @@ nodo, más un campo para guardar la cantidad actual de elementos en la lista. En
 	lista->nodo_final = nodo_nuevo;
     lista->cantidad++;
 ```
-En la funcion `lista_iterador_crear` se reserva memoria en el heap para un iterador el cual tiene tiene un puntero a una lista y un puntero al nodo actual de la lista que se inicializa con el primer nodo de la lista 
+En la funcion `lista_iterador_crear` se reserva memoria en el heap para un iterador el cual tiene un puntero a la lista y un puntero al nodo actual de la lista que se inicializa con el primer nodo. 
 
 ```c
 // EN LA FUNCION LISTA ITERADOR CREAR
@@ -87,17 +86,16 @@ lista_iterador_t *iterador = malloc(sizeof(lista_iterador_t));
 
 
 <div align="center">
-<img width="70%" src="img/diagrama de memoria lista.jpeg">
+<img width="70%" src="img/diagrama de memoria de lista.jpeg">
 </div>
 
-En el archivo `pila.c`en  la funcion `pila_crear` se crea un puntero a una pila en el stack que apunta a una pila en el heap,la cual tiene un campo que apunta al primer elemento de la pila que es donde se van a apilar mas elementos  y posterioremente se desapilaran por el mismo lugar.
+En el archivo `pila.c` en  la funcion `pila_crear` se crea un puntero a una pila en el stack que apunta a una pila en el heap,la cual tiene un campo que apunta al primer elemento de la pila que es donde se van a apilar mas elementos  y posterioremente se desapilaran por el mismo lugar.
 
 <div align="center">
 <img width="70%" src="img/diagrama de memoria de pila.jpeg">
 </div>
 
-
-En el archivo `cola.c` en  la funcion  `cola_crear` se crea un puntero a una cola en el stack la cual apunta a un cola en el heap,la cual tiene un puntero al ultimo nodo de la cola que es donde se iran encolando mas nodos y la cola cambien tiene un puntero al primer nodo que es donde se iran desencolando los nodos.
+En el archivo `cola.c` en la función `cola_crear` se crea un puntero a una cola en el stack la cual apunta a una cola en el heap, la cual tiene un puntero al último nodo que es donde se irá encolando más nodos tambien tiene un puntero al primer nodo que es donde se ira desencolando los nodos.
 
 <div align="center">
 <img width="70%" src="img/diagrama de memoria de cola.jpeg">
@@ -110,49 +108,49 @@ En el archivo `cola.c` en  la funcion  `cola_crear` se crea un puntero a una col
 ## Respuestas a las preguntas teóricas
 Incluír acá las respuestas a las preguntas del enunciado (si aplica).
 
- DIAGRAMA DE LISTA
+## DIAGRAMA DE LISTA
+
 <div align="center">
 <img width="70%" src="img/diagrama de lista.jpeg">
 </div>
 
-DIAGRAMA DE COLA
+## DIAGRAMA DE COLA
+
 <div align="center">
 <img width="70%" src="img/diagrama de cola.jpeg">
 </div>
-DIAGRAMA DE PILA
+
+## DIAGRAMA DE PILA
+
 
 <div align="center">
 <img width="70%" src="img/diagrama de pila.jpeg">
 </div>
 
+## TABLA DE COMPLEJIDADES EN UNA LISTA
 
 <div align="center">
 <img width="70%" src="img/tabla de complejidades.jpeg">
 </div>
 
 
-
-       
-__________________________________________________________________________________________________________________________________
-
-        COMPLEJIDAD DE LAS OPERACIONES DE COLA
+## COMPLEJIDAD DE LAS OPERACIONES DE COLA
 
         CREAR COLA:  es O(1).
-        COLA ENCOLAR: es O(1),ya que tenemos acceso altimo elemento y podemos encolar en eesa posicion.
-        COLA DESENCOLAR: es O(1) ya que tenemos que desncolamos en la primera posicion.
-        COLA FRENTE:es O(1), ya que tenemos acceso al priemer elementos de la cola.
-        COLA DETRUIR:es O(n), ya que tenemos que ir destruyendo cada elemento desde el comienzo.
-        COLA VACIO:es O(1),ya que tenemos una variable que nos indica la cantidad de elementos o 0 es el caso de estar vacio.
+        COLA ENCOLAR: es O(1),ya que tenemos un puntero al ultimo elemento y podemos encolar en esa posicion sin tener que buscarla.
+        COLA DESENCOLAR: es O(1) ya que tenemos que desencolar en la primera posicion y siempre sera una iteracion.
+        COLA FRENTE:es O(1), ya que tenemos un puntero al primer elementos de la cola y a su informacion.
+        COLA DETRUIR:es O(n), ya que tenemos que ir destruyendo cada elemento desde el comienzo de la cola.
+        COLA VACIO:es O(1),ya que tenemos un campo en la cola que nos indica la cantidad de elementos o 0 es el caso de estar vacio.
         COLA TAMAÑO:es O(1),ya que hay un campo que indica la cantidad de elementos en la cola.
 
 
-
-        COMPLEJIDAD DE LAS OPERACIONES DE PILA
+## COMPLEJIDAD DE LAS OPERACIONES DE PILA
 
         CREAR PILA: ES O(1),ya que hago un calloc.
-        PILA APILAR: es O(1) ya que apilamos siempre en la primera posicion.
-        PILA DESAPILAR:es O(1),ya que desapilamos en la primera posicon donde se encuentra el ultimo elemento apilado.
-        TOPE:es O(1),ya que tenemos acceso al primer elemento.
-        PILA DETRUIR:es O(n) ya que avanzamos desde el ultimo elemento apilado desapilando los demas.
-        PILA VACIO:es o(1).
-        PILA TAMAÑO: es o(1), ya que tenemos un campo en pila que nos indica la cantidad.
+        PILA APILAR: Es O(1) ya que apilamos siempre en la primera posicion.
+        PILA DESAPILAR: Es O(1),ya que desapilamos siempre en la primera posicon donde se encuentra el ultimo elemento apilado.
+        PILA TOPE : Es O(1),ya que hay un puntero al primer nodo de la cola.
+        PILA DETRUIR: Es O(n) ya que avanzamos desde el ultimo elemento apilado, desapilando los demas.
+        PILA VACIO: Es O(1),ya que tenemos un campo en la pila que nos indica la cantidad de elementos o 0 es el caso de estar vacio..
+        PILA TAMAÑO: Es o(1), ya que tenemos un campo en pila que nos indica la cantidad de elementos en la pila.
