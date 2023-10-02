@@ -53,7 +53,7 @@ void pruebas_de_crear_lista_recien_creada()
 	pa2m_afirmar(lista_insertar_en_posicion(lista, elemento, 0) == lista,
 		     "se inserto en la posicion 0");
 	pa2m_afirmar(lista_elemento_en_posicion(lista, 0) == elemento,
-		     "busco el elemento en la posicion 0 y lo encuentro");
+		     "el elemento en la posicion 0 y lo encuentro");
 	pa2m_afirmar(lista_insertar_en_posicion(lista, elemento, 8) == lista,
 		     "no se puede insertar en la posicion 8 ,inserto al final");
 	lista_destruir(lista);
@@ -362,23 +362,27 @@ void pruebas_de_iterador_externo()
 	lista_t *lista = lista_crear();
 	lista_iterador_t *iterador;
 
-	void *elemento1 = (void *)30, *elemento2 = (void *)64,
-	     *elemento3 = (void *)54, *elemento4 = (void *)61,
-	     *elemento5 = (void *)20, *elemento6 = (void *)10,
-	     *elemento7 = (void *)90;
+	int elemento1 = 30, elemento2 = 64, elemento3 = 54, elemento4 = 61,
+	    elemento5 = 20, elemento6 = 10, elemento7 = 90;
 
-	lista_insertar(lista, elemento1);
-	lista_insertar(lista, elemento2);
-	lista_insertar(lista, elemento3);
-	lista_insertar(lista, elemento4);
-	lista_insertar(lista, elemento5);
-	lista_insertar(lista, elemento6);
-	lista_insertar(lista, elemento7);
+	int vector[8] = { 30, 64, 54, 61, 20, 10, 90 };
+	lista_insertar(lista, &elemento1);
+	lista_insertar(lista, &elemento2);
+	lista_insertar(lista, &elemento3);
+	lista_insertar(lista, &elemento4);
+	lista_insertar(lista, &elemento5);
+	lista_insertar(lista, &elemento6);
+	lista_insertar(lista, &elemento7);
 
 	int elementos_recoridos = 0;
+	int i = 0;
 	for (iterador = lista_iterador_crear(lista);
 	     lista_iterador_tiene_siguiente(iterador);
 	     lista_iterador_avanzar(iterador)) {
+		int *valor = lista_iterador_elemento_actual(iterador);
+		pa2m_afirmar(*valor == vector[i],
+			     "el elemento iterado es correcto");
+		i++;
 		elementos_recoridos++;
 	}
 	pa2m_afirmar(elementos_recoridos == lista_tamanio(lista),

@@ -24,7 +24,8 @@ make valgrind-chanutron
 ```
 ---
 ##  Funcionamiento
-El trabajo consiste en un TDA elaborado con nodos enlazados que pueden almacenar elementos de cualquier tipo y permiten aumentar la cantidad de elementos en la lista cada vez que se necesite sin la desventaja de tener que redimensionar todos los elementos como lo sería con un vector dinámico.
+
+El trabajo consiste en un TDA elaborado con nodos enlazados que pueden almacenar elementos de cualquier tipo y aumentar la cantidad de elementos en la lista cada vez que se necesite sin la desventaja de tener que redimensionar todos los elementos como lo sería con un vector dinámico.
 __________________________________________________________________________________________________________________________________
 
 
@@ -49,26 +50,23 @@ struct lista_iterador {
 };
 
 ```
+## interaccion con la memoria 
 
-En el archivo `lista.c` la función `lista_crear` utiliza `calloc` para inicializar un puntero a una lista en el heap,
-la cual tiene un puntero al primer nodo y uno para el ultimo, más un campo para guardar la cantidad actual de elementos en la lista. En la función `lista_insertar` se reserva memoria para un nodo en el heap el cual contiene un campo para el elemento recibido y un puntero al siguiente nodo que será inicializado en `NULL` momentáneamente hasta que se inserte otro nodo actualizando el puntero al último nodo y aumentando la cantidad de elementos en la lista.
+En el archivo `lista.c` la función `lista_crear` en la funcion se utiliza `calloc` para inicializar un puntero a una lista en el heap,la cual tiene un puntero al primer nodo y uno para el ultimo, más un campo para guardar la cantidad actual de elementos en la lista. En la función `lista_insertar` se reserva memoria para un nodo en el heap el cual contiene un campo para el elemento recibido y un puntero al siguiente nodo que será inicializado en `NULL` momentáneamente hasta que se inserte otro nodo actualizando el puntero al último nodo y aumentando la cantidad de elementos en la lista.
 
 ```c
 /* EN LA FUNCION LISTA INSERTAR  */
 
-    nodo_t *nodo_nuevo = calloc(1, sizeof(nodo_t));
-	if (nodo_nuevo == NULL)
+   
+nodo_t *crear_nodo_nuevo(void *elemento)
+{
+	nodo_t *nodo_nuevo = calloc(1, sizeof(nodo_t));
+	if (!nodo_nuevo) {
 		return NULL;
-
-	nodo_nuevo->elemento = elemento;
-
-	if (lista_vacia(lista)) {
-		lista->nodo_inicio = nodo_nuevo;
-	} else {
-		lista->nodo_final->siguiente = nodo_nuevo;
 	}
-	lista->nodo_final = nodo_nuevo;
-    lista->cantidad++;
+	nodo_nuevo->elemento = elemento;
+	return nodo_nuevo;
+}
 ```
 En la funcion `lista_iterador_crear` se reserva memoria en el heap para un iterador el cual tiene un puntero a la lista y un puntero al nodo actual de la lista que se inicializa con el primer nodo. 
 
